@@ -19,6 +19,6 @@ router.post("/refresh", refreshToken);
 
 // Protected routes
 router.post("/profile", verifyToken, createProfile);
-router.get("/profile", verifyToken, getProfile);
+router.get("/profile/:username", getProfile);
 
 module.exports = router;
