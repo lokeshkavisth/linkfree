@@ -113,13 +113,10 @@ export function LoginForm() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Username *</FormLabel>
                   <FormControl>
                     <Input placeholder="username" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -130,7 +127,7 @@ export function LoginForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Password *</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Example@123"
@@ -138,9 +135,6 @@ export function LoginForm() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -150,7 +144,9 @@ export function LoginForm() {
         </Form>
       </CardContent>
       <CardFooter>
-        <Link href={"/register"}>Don&rsquo;t have an account?</Link>
+        <Link href={"/register"} className="border-b border-foreground">
+          Don&rsquo;t have an account?
+        </Link>
       </CardFooter>
     </Card>
   );

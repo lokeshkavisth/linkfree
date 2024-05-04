@@ -51,6 +51,6 @@ export async function LinkFreeAPI(options) {
     return res.data;
   } catch (error) {
     console.error(error);
-    return Promise.reject(error);
+    return error.response;
   }
 }

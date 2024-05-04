@@ -130,12 +130,13 @@ export function RegisterForm() {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Username *</FormLabel>
                   <FormControl>
                     <Input placeholder="username" {...field} />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name.
+                    Username must be between 2 and 26 characters long and can
+                    only contain letters, numbers, and underscores.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -147,7 +148,7 @@ export function RegisterForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Email *</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="example@mail.com"
@@ -155,9 +156,6 @@ export function RegisterForm() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -168,7 +166,7 @@ export function RegisterForm() {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Password *</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Example@123"
@@ -177,7 +175,8 @@ export function RegisterForm() {
                     />
                   </FormControl>
                   <FormDescription>
-                    This is your public display name.
+                    Password must contain at least one lowercase, one uppercase,
+                    one number and one special character.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -188,7 +187,9 @@ export function RegisterForm() {
         </Form>
       </CardContent>
       <CardFooter>
-        <Link href={"/login"}>Already have an account?</Link>
+        <Link href={"/login"} className="border-b border-foreground">
+          Already have an account?
+        </Link>
       </CardFooter>
     </Card>
   );
