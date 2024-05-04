@@ -10,6 +10,7 @@ import { LinkFreeAPI } from "@/utils/api";
 import { PlusIcon, TrashIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 
 const Admin = () => {
   const { user, accessToken } = useAuth();
@@ -60,6 +61,14 @@ const Admin = () => {
 
         const res = await LinkFreeAPI(requestConfig);
         console.log("api response backend", res);
+
+        if (res?.data?.success && res.data.success === false) {
+          toast.error(res.data.message);
+        }
+
+        if (res.success) {
+          toast.success(res.message);
+        }
       };
 
       reader.readAsDataURL(file);
