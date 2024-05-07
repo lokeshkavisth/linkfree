@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { FormDescription } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -12,9 +11,11 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 
-const Admin = () => {
-  const { user, accessToken } = useAuth();
+const CreateProfile = () => {
+  const { isAuthenticated } = useAuth();
+  const user = isAuthenticated();
   const router = useRouter();
+
   const [links, setLinks] = useState([{ title: "", url: "" }]);
 
   function addNewLink() {
@@ -22,7 +23,6 @@ const Admin = () => {
   }
 
   function removeLink(index) {
-    console.log(index);
     setLinks(links.filter((_, i) => i !== index));
   }
 
@@ -39,16 +39,27 @@ const Admin = () => {
     const bio = e.target.bio.value;
 
     try {
+      // Client-side validation
+      if (
+        !file ||
+        !displayName ||
+        !bio ||
+        links.some((link) => !link.title || !link.url)
+      ) {
+        return toast.error("Please fill out all required fields");
+      }
+
+      // Additional client-side validation can be added for file type and size
+
       const reader = new FileReader();
       reader.onload = async function (event) {
         const avatar = event.target.result;
-        // console.log({ displayName, bio, links, avatar });
 
         const requestConfig = {
           method: "POST",
           url: "/profile",
           headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${user.accessToken}`,
           },
           data: {
             displayName,
@@ -60,7 +71,6 @@ const Admin = () => {
         };
 
         const res = await LinkFreeAPI(requestConfig);
-        console.log("api response backend", res);
 
         if (res?.data?.success && res.data.success === false) {
           toast.error(res.data.message);
@@ -68,20 +78,23 @@ const Admin = () => {
 
         if (res.success) {
           toast.success(res.message);
+          // Redirect or perform any other action upon successful submission
+          router.push("/dashboard");
         }
       };
 
       reader.readAsDataURL(file);
 
-      // clear the form at once and clear the titles and url as well
+      // Clear the form and link inputs after submission
       e.target.reset();
       setLinks([{ title: "", url: "" }]);
     } catch (error) {
       console.error(error);
+      toast.error("An error occurred while processing your request");
     }
   }
 
-  if (!user && !user?.uid) return router.push("/login");
+  if (!user || !user.uid) return router.push("/login");
 
   return (
     <section className="max-w-3xl mx-auto my-10">
@@ -178,4 +191,4 @@ const Admin = () => {
   );
 };
 
-export default Admin;
+export default CreateProfile;

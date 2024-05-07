@@ -3,6 +3,7 @@
 import axios from "axios";
 import { BASE_URL } from "@/constants/constants";
 import { jwtDecode } from "jwt-decode";
+import { useAuth } from "@/lib/authContext";
 
 export const refreshToken = async () => {
   const refreshToken = JSON.parse(localStorage.getItem("refreshToken"));
@@ -16,6 +17,7 @@ export const refreshToken = async () => {
       localStorage.setItem("accessToken", JSON.stringify(data.accessToken));
       localStorage.setItem("refreshToken", JSON.stringify(data.refreshToken));
     }
+
     return data;
   } catch (err) {
     console.error(err);
@@ -45,9 +47,11 @@ axiosJWT.interceptors.request.use(
 
 export async function LinkFreeAPI(options) {
   const baseURL = BASE_URL;
+  // const { isAuthenticated } = useAuth;
 
   try {
     const res = await axiosJWT({ baseURL, ...options });
+    // isAuthenticated();
     return res.data;
   } catch (error) {
     console.error(error);

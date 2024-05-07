@@ -1,17 +1,17 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { ThemeSwitcher } from "./theme-switcher";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Image from "next/image";
 import Link from "next/link";
-import RedirectToLogin from "./redirect-to-login";
-// import { Auth } from "@/utils/auth";
 import Logout from "./logout";
 import { useAuth } from "@/lib/authContext";
+import RedirectBtn from "./redirectBtn";
 
 const Navbar = () => {
-  const { user } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const user = isAuthenticated();
+
   return (
     <header className="bg-background border-b border-border p-4">
       <section className="flex items-center justify-between max-w-7xl mx-auto">
@@ -19,20 +19,24 @@ const Navbar = () => {
           <Logo />
         </div>
         <div className="flex items-center gap-4">
-          {user && user?.username && (
+          {user && (
             <div>
               <span className="capitalize border-b border-white">
-                Welcome, {user?.username}
+                Welcome, {user.username}
               </span>
             </div>
           )}
 
           <ThemeSwitcher />
 
-          {user?.uid && user?.uid.length > 0 ? (
+          {user && user.uid ? (
             <Logout />
           ) : (
-            <RedirectToLogin text="Login/Register" variant="secondary" />
+            <RedirectBtn
+              path={"/login"}
+              text="Login/Register"
+              variant="secondary"
+            />
           )}
         </div>
       </section>

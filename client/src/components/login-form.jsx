@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -28,7 +27,6 @@ import Link from "next/link";
 import axios from "axios";
 import { BASE_URL } from "@/constants/constants";
 import { useRouter } from "next/navigation";
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { useAuth } from "@/lib/authContext";
 
@@ -66,24 +64,6 @@ export function LoginForm() {
   const router = useRouter();
   const { login } = useAuth();
 
-  const loginUser = async (values) => {
-    const { data } = await axios.post(`${BASE_URL}/login`, values);
-    return data;
-  };
-
-  const mutation = useMutation({
-    mutationFn: loginUser,
-    onSuccess: (data) => {
-      // console.log("Response data:", data);
-      toast.success(data.message);
-      router.push("/admin");
-      login(data);
-    },
-    onError: (error) => {
-      toast.error(error.response.data.message || "An error occurred");
-    },
-  });
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -93,7 +73,22 @@ export function LoginForm() {
   });
 
   async function onSubmit(values) {
-    mutation.mutate(values);
+    if (values.username == "" || values.password == "") {
+      return toast.error("Please fill out all required fields");
+    }
+
+    try {
+      const { data } = await axios.post(`${BASE_URL}/login`, values);
+
+      if (data.success) {
+        toast.success(data.message);
+        login(data);
+        router.push("/dashboard");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message || "An error occurred");
+    }
   }
 
   return (

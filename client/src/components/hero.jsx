@@ -1,8 +1,14 @@
+"use client";
+
 import Image from "next/image";
 import React from "react";
 import MockupExample from "@/assets/mockups.png";
-import RedirectToLogin from "./redirect-to-login";
+import RedirectBtn from "./redirectBtn";
+import { useAuth } from "@/lib/authContext";
 const Hero = () => {
+  const { isAuthenticated } = useAuth();
+  const user = isAuthenticated();
+
   return (
     <section className="my-40">
       <div className="flex flex-col items-center gap-10 justify-center max-w-3xl mx-auto text-center">
@@ -16,7 +22,11 @@ const Hero = () => {
             Instagram, TikTok, Twitter, YouTube and other social media profiles.
           </p>
         </div>
-        <RedirectToLogin text="Get Started For Free" />
+        {user && user?.uid ? (
+          <RedirectBtn text="Go to Your Dashboard" path={"/dashboard"} />
+        ) : (
+          <RedirectBtn text="Get Started For Free" path={"/login"} />
+        )}
         <div className="mt-12 bg-green-400 rounded-xl p-6">
           <Image
             src={MockupExample}

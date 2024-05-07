@@ -5,7 +5,6 @@ import { ThemeProvider } from "@/utils/theme-provider";
 import Navbar from "@/components/navbar";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
-import QueryProvider from "@/utils/quey-provider";
 import { AuthProvider } from "@/lib/authContext";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,18 +24,16 @@ export default function RootLayout({ children }) {
         )}
       >
         <AuthProvider>
-          <QueryProvider>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <Navbar />
-              <ToastContainer position="top-center" autoClose={1000} />
-              <main className="p-4">{children}</main>
-            </ThemeProvider>
-          </QueryProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <Navbar />
+            <ToastContainer position="top-center" autoClose={1000} />
+            <main className="p-4">{children}</main>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>

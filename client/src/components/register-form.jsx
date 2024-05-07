@@ -29,7 +29,6 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { BASE_URL } from "@/constants/constants";
-import { useMutation } from "@tanstack/react-query";
 
 const formSchema = z.object({
   username: z
@@ -65,23 +64,6 @@ const formSchema = z.object({
 export function RegisterForm() {
   const router = useRouter();
 
-  const createUser = async (values) => {
-    const { data } = await axios.post(`${BASE_URL}/register`, values);
-    return data;
-  };
-
-  const mutation = useMutation({
-    mutationFn: createUser,
-    onSuccess: (data) => {
-      // console.log("Response data:", data);
-      toast.success(data.message);
-      router.push("/login");
-    },
-    onError: (error) => {
-      toast.error(error.response.data.message || "An error occurred");
-    },
-  });
-
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -92,25 +74,20 @@ export function RegisterForm() {
   });
 
   async function onSubmit(values) {
-    mutation.mutate(values);
-    // console.log(mutation.isError, mutation.isSuccess, mutation.isLoading);
+    if (values.username == "" || values.email == "" || values.password == "") {
+      return toast.error("Please fill out all required fields");
+    }
 
-    // console.log(mutation);
-
-    // try {
-    //   const url = BASE_URL + "/register";
-    //   const { data } = await axios.post(url, values);
-
-    //   if (data.message) {
-    //     toast(data.message);
-    //   }
-
-    //   if (data.success) {
-    //     return router.push("/login");
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
+    try {
+      const { data } = await axios.post(`${BASE_URL}/register`, values);
+      if (data.success) {
+        toast.success(data.message);
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response.data.message || "An error occurred");
+    }
   }
 
   return (

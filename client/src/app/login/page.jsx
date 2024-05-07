@@ -6,10 +6,11 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const Login = () => {
-  const { user } = useAuth();
+  const { isAuthenticated } = useAuth();
+  const user = isAuthenticated();
   const router = useRouter();
 
-  if (user && user.uid) return router.push("/admin");
+  if (user && user.uid) return router.push("/dashboard");
 
   return (
     <div>
